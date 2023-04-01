@@ -60,6 +60,8 @@ export const AutocompleteDropdown = memo(
         dataSetItem = dataSet.find(el => el.id === props.initialValue)
       } else if (typeof props.initialValue === 'object' && props.initialValue.id) {
         dataSetItem = dataSet.find(el => el.id === props.initialValue.id)
+      } else if (typeof props.initialValue === 'object' && props.initialValue.id === 0) {
+        dataSetItem = dataSet.find(el => el.id === props.initialValue.id)
       }
 
       if (dataSetItem) {
@@ -166,7 +168,15 @@ export const AutocompleteDropdown = memo(
         item => typeof item.title === 'string' && item.title.toLowerCase().indexOf(lowerSearchText) !== -1
       )
 
-      setDataSet(newSet)
+      if (newSet && newSet.length === 0) {
+        const addData = [{
+          id: 0,
+          title: `+Add: ${searchText}`,
+        }]
+        setDataSet(addData);
+      } else {
+        setDataSet(newSet);
+      }
     }, [searchText, props.dataSet, props.useFilter])
 
     const renderItem = useCallback(
